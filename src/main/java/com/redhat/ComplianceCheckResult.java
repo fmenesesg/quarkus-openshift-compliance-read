@@ -24,15 +24,6 @@ public class ComplianceCheckResult {
 
     private static final Logger LOGGER = Logger.getLogger("ComplianceCheckResult");
 
-    
-    CustomResourceDefinitionContext ccr = new CustomResourceDefinitionContext
-    .Builder()
-    .withGroup("compliance.openshift.io")
-    .withScope("Namespaced")
-    .withVersion("v1alpha1")
-    .withPlural("compliancecheckresults")
-    .build();
-
     @Inject
     OpenShiftClient openshiftClient;
     
@@ -42,10 +33,15 @@ public class ComplianceCheckResult {
     
     public  JsonObject ccrs(@PathParam("namespace") String namespace) {
         
-        /*Map<String, Object> response = openshiftClient.customResource(ccr).get();
-        LOGGER.info(response);*/
+        CustomResourceDefinitionContext ccr = new CustomResourceDefinitionContext
+        .Builder()
+        .withGroup("compliance.openshift.io")
+        .withScope("Namespaced")
+        .withVersion("v1alpha1")
+        .withPlural("compliancecheckresults")
+        .build();
         
-        JsonObject jsonObject = new JsonObject(openshiftClient.customResource(ccr).list());
+        JsonObject jsonObject = new JsonObject(openshiftClient.customResource(ccr).inNamespace(namespace).list());
         LOGGER.info(jsonObject);
         
 
